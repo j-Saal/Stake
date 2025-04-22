@@ -5,13 +5,16 @@ import java.awt.event.*;
 public class StakeView extends JFrame implements KeyListener, MouseListener, MouseMotionListener {
     private final int WINDOW_WIDTH = 1000;
     private final int WINDOW_HEIGHT = 800;
+    private final JTextField minesField;
+    private final JTextField betField;
     private Stake stake;
     private int GAME_STATE;
-    private Image minesLogo, stakeBackground;
+    private Image minesLogo, stakeBackground, minesSquares;
 
     public StakeView (Stake stake) {
         minesLogo = new ImageIcon("Resources/StakeMinesLogo.jpeg").getImage();
         stakeBackground = new ImageIcon("Resources/StakeBackground.png").getImage();
+        minesSquares = new ImageIcon("Resources/MinesSquares.png").getImage();
         GAME_STATE = 1;
         this.stake = stake;
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -21,6 +24,14 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         addMouseListener(this);
         addMouseMotionListener(this);
         addKeyListener(this);
+
+        minesField = new JTextField();
+        minesField.setBounds(10, 50, 140, 40);
+        add(minesField);
+
+        betField = new JTextField();
+        betField.setBounds(10, 110, 140, 40);
+        add(betField);
     }
 
     @Override
@@ -92,6 +103,9 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         if (GAME_STATE == 2) {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+            g.drawImage(minesSquares, 0, 28, WINDOW_WIDTH, WINDOW_HEIGHT - 45, this);
+            minesField.setVisible(true);
+            betField.setVisible(true);
         }
     }
 }
