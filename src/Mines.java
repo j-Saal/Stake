@@ -5,10 +5,13 @@ public class Mines {
     private double[][] multipliers;
     private int numMines;
     private boolean cashOut;
-
+    private int minesClicked;
+    private boolean lost;
 
     public Mines(int numMines) {
         this.numMines = numMines;
+        lost = false;
+        minesClicked = 0;
         grid = new boolean[5][5];
         cashOut = false;
         ArrayList<Integer> indexes = new ArrayList<>();
@@ -36,11 +39,19 @@ public class Mines {
         return grid[row][col];
     }
 
+    public void setLost() {
+        this.lost = true;
+    }
+
+    public void mineSafe() {
+        minesClicked++;
+    }
+
     public void setCashOut(boolean cashOut) {
         this.cashOut = cashOut;
     }
 
-    public double getMultiplier(int numSelected) {
+    public double getMultiplier() {
         multipliers = new double[][]{
                 {1.01, 1.08, 1.12, 1.18, 1.24, 1.3, 1.37, 1.46, 1.55, 1.65, 1.77, 1.9, 2.06, 2.25, 2.47, 2.75, 3.09, 3.54, 4.12, 4.95, 6.19, 8.25, 12.37, 24.75},
                 {1.08, 1.17, 1.29, 1.41, 1.56, 1.71, 1.94, 2.18, 2.47, 2.83, 3.26, 3.81, 4.45, 5.4, 6.6, 8.25, 10.61, 14.14, 19.8, 29.7, 49.5, 99, 297},
@@ -67,8 +78,8 @@ public class Mines {
                 {12.38, 297},
                 {24.75}
         };
-        if (cashOut) {
-            return multipliers[numSelected][numMines];
+        if (cashOut && !lost) {
+            return multipliers[minesClicked][numMines];
         }
         else {
             return 0;

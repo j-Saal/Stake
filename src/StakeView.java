@@ -11,7 +11,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
     private int GAME_STATE;
     private Image minesLogo, stakeBackground, minesSquares;
 
-    public StakeView (Stake stake) {
+    public StakeView(Stake stake) {
         minesLogo = new ImageIcon("Resources/StakeMinesLogo.jpeg").getImage();
         stakeBackground = new ImageIcon("Resources/StakeBackground.png").getImage();
         minesSquares = new ImageIcon("Resources/MinesSquares.png").getImage();
@@ -47,8 +47,42 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         }
         // If game is at mines screen check which mine is selected
         if (GAME_STATE == 2) {
-
+            if (getIndexeX(x) == -1 || getIndexeY(y) == -1) {
+                return;
+            }
+            if (stake.getMines().selectMine(getIndexeY(y), getIndexeX(x))) {
+                stake.getMines().mineSafe();
+            }
+            else {
+                stake.getMines().setLost();
+            }
         }
+    }
+
+    public int getIndexeX(int x) {
+        int gridStartX = 164;
+        int rectWidth = 125;
+        int xOffset = 13;
+
+        int col = (x - gridStartX) / (rectWidth + xOffset);
+
+        if (col >= 0 && col < 5) {
+            return col;
+        }
+        return -1;
+    }
+
+    public int getIndexeY(int y) {
+        int gridStartY = 39;
+        int rectHeight = 150;
+        int yOffset = 10;
+
+        int row = (y - gridStartY) / (rectHeight + yOffset);
+
+        if (row >= 0 && row < 5) {
+            return row;
+        }
+        return -1;
     }
 
     @Override

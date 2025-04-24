@@ -8,6 +8,10 @@ public class Stake {
         window = new StakeView(this);
         mines = new Mines(0);
     }
+
+    public Mines getMines() {
+        return this.mines;
+    }
     public static void main(String[] args) {
         Stake s = new Stake();
     }
