@@ -7,15 +7,22 @@ public class Mines {
     private boolean cashOut;
     private int minesClicked;
     private boolean lost;
+    private boolean[][] clicked;
 
     public Mines(int numMines) {
         this.numMines = numMines;
         lost = false;
         minesClicked = 0;
         grid = new boolean[5][5];
+        clicked = new boolean[5][5];
         cashOut = false;
         ArrayList<Integer> indexes = new ArrayList<>();
         int num = (int) (Math.random() * 25);
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                clicked[i][j] = false;
+            }
+        }
         for (int i = 0; i < numMines; i++) {
             if (!indexes.contains(num)) {
                 indexes.add(num);
@@ -39,6 +46,14 @@ public class Mines {
         return grid[row][col];
     }
 
+    public void setClicked(int row, int col) {
+        clicked[row][col] = true;
+    }
+
+    public boolean getClicked(int row, int col) {
+        return this.clicked[row][col];
+    }
+
     public void setLost() {
         this.lost = true;
     }
@@ -49,6 +64,10 @@ public class Mines {
 
     public void setCashOut(boolean cashOut) {
         this.cashOut = cashOut;
+    }
+
+    public boolean getOver() {
+        return cashOut || lost;
     }
 
     public double getMultiplier() {

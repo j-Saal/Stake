@@ -9,12 +9,14 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
     private final JTextField betField;
     private Stake stake;
     private int GAME_STATE;
-    private Image minesLogo, stakeBackground, minesSquares;
+    private Image minesLogo, stakeBackground, minesSquares, diamond, bomb;
 
     public StakeView(Stake stake) {
         minesLogo = new ImageIcon("Resources/StakeMinesLogo.jpeg").getImage();
         stakeBackground = new ImageIcon("Resources/StakeBackground.png").getImage();
         minesSquares = new ImageIcon("Resources/MinesSquares.png").getImage();
+        diamond = new ImageIcon("Resources/diamond.png").getImage();
+        bomb = new ImageIcon("Resources/bomb.png").getImage();
         GAME_STATE = 1;
         this.stake = stake;
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -36,6 +38,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        repaint();
         int x = e.getX();
         int y = e.getY();
         // If at menu screen check which game is selected
@@ -46,15 +49,19 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
             }
         }
         // If game is at mines screen check which mine is selected
-        if (GAME_STATE == 2) {
+        else if (GAME_STATE == 2) {
             if (getIndexeX(x) == -1 || getIndexeY(y) == -1) {
                 return;
             }
             if (stake.getMines().selectMine(getIndexeY(y), getIndexeX(x))) {
+                stake.getMines().setClicked(getIndexeY(y), getIndexeX(x));
                 stake.getMines().mineSafe();
+                stake.play();
             }
             else {
                 stake.getMines().setLost();
+                stake.getMines().setClicked(getIndexeY(y), getIndexeX(x));
+                stake.play();
             }
         }
     }
@@ -140,6 +147,23 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
             g.drawImage(minesSquares, 0, 28, WINDOW_WIDTH, WINDOW_HEIGHT - 45, this);
             minesField.setVisible(true);
             betField.setVisible(true);
+            g.setColor(Color.WHITE);
+            g.drawString("Current Balance: ", 10, 210);
+            g.drawString("Current Bet: ", 10, 260);
+            g.drawString(String.valueOf(stake.getPlayer().getBalance()), 10, 230);
+            g.drawString(String.valueOf(stake.getPlayer().getBet()), 10, 280);
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    if (stake.getMines().getClicked(i, j)) {
+                        if (stake.getMines().selectMine(i, j)) {
+                            g.drawImage(diamond, 154 + (125 * j) + (13 * j), 19 + (140 * i) + (10 * i), 143, 150, this);
+                        }
+                        else {
+                            g.drawImage(bomb, 154 + (140 * j) + (13 * j), 19 + (125 * i) + (10 * i), 143, 150, this);
+                        }
+                    }
+                }
+            }
         }
     }
 }

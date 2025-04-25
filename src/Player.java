@@ -1,13 +1,21 @@
 public class Player {
 
     private int balance;
-    private int bet;
+    private double bet;
 
     public Player(int balance) {
         this.balance = balance;
     }
 
-    public void updateBalance(int number) {
+    public double getBet() {
+        return bet;
+    }
+
+    public double getBalance() {
+        return this.balance;
+    }
+
+    public void updateBalance(double number) {
         this.balance += number;
     }
 }
