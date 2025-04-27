@@ -16,6 +16,22 @@ public class Mines {
         grid = new boolean[5][5];
         clicked = new boolean[5][5];
         cashOut = false;
+        updateMines(numMines);
+    }
+
+    public boolean selectMine(int row, int col) {
+        return grid[row][col];
+    }
+
+    public void setClicked(int row, int col) {
+        clicked[row][col] = true;
+    }
+
+    public boolean getClicked(int row, int col) {
+        return this.clicked[row][col];
+    }
+
+    public void updateMines(int numMines) {
         ArrayList<Integer> indexes = new ArrayList<>();
         int num = (int) (Math.random() * 25);
         for (int i = 0; i < 5; i++) {
@@ -40,18 +56,6 @@ public class Mines {
         for (int i: indexes) {
             grid[i / 5][i % 5] = false;
         }
-    }
-
-    public boolean selectMine(int row, int col) {
-        return grid[row][col];
-    }
-
-    public void setClicked(int row, int col) {
-        clicked[row][col] = true;
-    }
-
-    public boolean getClicked(int row, int col) {
-        return this.clicked[row][col];
     }
 
     public void setLost() {

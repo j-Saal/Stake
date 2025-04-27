@@ -7,6 +7,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
     private final int WINDOW_HEIGHT = 800;
     private final JTextField minesField;
     private final JTextField betField;
+    private final JButton cashOut;
     private Stake stake;
     private int GAME_STATE;
     private Image minesLogo, stakeBackground, minesSquares, diamond, bomb;
@@ -23,17 +24,32 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         this.setTitle("Stake");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
+        this.setLayout(null);
+        this.setFocusable(true);
+        this.requestFocusInWindow();
         addMouseListener(this);
         addMouseMotionListener(this);
         addKeyListener(this);
 
         minesField = new JTextField();
         minesField.setBounds(10, 50, 140, 40);
+        minesField.setVisible(false);
         add(minesField);
 
         betField = new JTextField();
         betField.setBounds(10, 110, 140, 40);
+        betField.setVisible(false);
         add(betField);
+
+        cashOut = new JButton("Cashout");
+        cashOut.setBounds(10, 170, 140, 40);
+        cashOut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                stake.getMines().setCashOut(true);
+            }
+        });
+        cashOut.setVisible(false);
+        add(cashOut);
     }
 
     @Override
@@ -64,6 +80,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
                 stake.play();
             }
         }
+        requestFocusInWindow();
     }
 
     public int getIndexeX(int x) {
@@ -121,12 +138,19 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            int mines = Integer.parseInt(minesField.getText());
+            double bet = Double.parseDouble(betField.getText());
+            stake.getMines().updateMines(mines);
+            stake.getPlayer().setBet(bet);
+            minesField.setVisible(false);
+            betField.setVisible(false);
+            repaint();
+        }
     }
 
     @Override
@@ -135,6 +159,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
     }
 
     public void paint(Graphics g) {
+        super.paint(g);
         if (GAME_STATE == 1) {
             g.setColor(Color.WHITE);
             g.drawRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -142,16 +167,17 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
             g.drawImage(minesLogo, 100, 300, 200, 300, this);
         }
         if (GAME_STATE == 2) {
+            cashOut.setVisible(true);
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
             g.drawImage(minesSquares, 0, 28, WINDOW_WIDTH, WINDOW_HEIGHT - 45, this);
             minesField.setVisible(true);
             betField.setVisible(true);
             g.setColor(Color.WHITE);
-            g.drawString("Current Balance: ", 10, 210);
-            g.drawString("Current Bet: ", 10, 260);
-            g.drawString(String.valueOf(stake.getPlayer().getBalance()), 10, 230);
-            g.drawString(String.valueOf(stake.getPlayer().getBet()), 10, 280);
+            g.drawString("Current Balance: ", 10, 260);
+            g.drawString("Current Bet: ", 10, 310);
+            g.drawString(String.valueOf(stake.getPlayer().getBalance()), 10, 280);
+            g.drawString(String.valueOf(stake.getPlayer().getBet()), 10, 330);
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
                     if (stake.getMines().getClicked(i, j)) {
@@ -159,7 +185,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
                             g.drawImage(diamond, 154 + (125 * j) + (13 * j), 19 + (140 * i) + (10 * i), 143, 150, this);
                         }
                         else {
-                            g.drawImage(bomb, 154 + (140 * j) + (13 * j), 19 + (125 * i) + (10 * i), 143, 150, this);
+                            g.drawImage(bomb, 154 + (125 * j) + (13 * j), 19 + (125 * i) + (10 * i), 143, 150, this);
                         }
                     }
                 }

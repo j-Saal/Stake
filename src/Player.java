@@ -11,6 +11,10 @@ public class Player {
         return bet;
     }
 
+    public void setBet(double bet) {
+        this.bet = bet;
+    }
+
     public double getBalance() {
         return this.balance;
     }
