@@ -7,10 +7,10 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
     private final int WINDOW_HEIGHT = 800;
     private final JTextField minesField;
     private final JTextField betField;
-    private final JButton cashOut;
+    private boolean doneTyping;
     private Stake stake;
     private int GAME_STATE;
-    private Image minesLogo, stakeBackground, minesSquares, diamond, bomb;
+    private Image minesLogo, stakeBackground, minesSquares, diamond, bomb, play;
 
     public StakeView(Stake stake) {
         minesLogo = new ImageIcon("Resources/StakeMinesLogo.jpeg").getImage();
@@ -18,6 +18,8 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         minesSquares = new ImageIcon("Resources/MinesSquares.png").getImage();
         diamond = new ImageIcon("Resources/diamond.png").getImage();
         bomb = new ImageIcon("Resources/bomb.png").getImage();
+        play = new ImageIcon("Resources/play1.png").getImage();
+        doneTyping = false;
         GAME_STATE = 1;
         this.stake = stake;
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -40,23 +42,11 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         betField.setBounds(10, 110, 140, 40);
         betField.setVisible(false);
         add(betField);
-
-        cashOut = new JButton("Cashout");
-        cashOut.setBounds(10, 170, 140, 40);
-        cashOut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                stake.getMines().setCashOut(true);
-                stake.play();
-                GAME_STATE = 3;
-            }
-        });
-        cashOut.setVisible(false);
-        add(cashOut);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        repaint();
+        requestFocusInWindow();
         int x = e.getX();
         int y = e.getY();
         // If at menu screen check which game is selected
@@ -67,6 +57,15 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         }
         // If game is at mines screen check which mine is selected
         else if (GAME_STATE == 2) {
+            if (x >= 10 && x <= 150 && y >= 400 && y<= 430) {
+                int mines = Integer.parseInt(minesField.getText());
+                double bet = Double.parseDouble(betField.getText());
+                stake.getMines().updateMines(mines);
+                stake.getPlayer().setBet(bet);
+                stake.getPlayer().updateBalance(-1 * bet);
+                repaint();
+                doneTyping = true;
+            }
             if (getIndexeX(x) == -1 || getIndexeY(y) == -1) {
                 return;
             }
@@ -86,13 +85,17 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
                 stake.play();
             }
         }
-        requestFocusInWindow();
+        repaint();
     }
 
     public int getIndexeX(int x) {
         int gridStartX = 164;
         int rectWidth = 125;
         int xOffset = 13;
+
+        if (x < gridStartX) {
+            return -1;
+        }
 
         int col = (x - gridStartX) / (rectWidth + xOffset);
 
@@ -148,14 +151,12 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            int mines = Integer.parseInt(minesField.getText());
-            double bet = Double.parseDouble(betField.getText());
-            stake.getMines().updateMines(mines);
-            stake.getPlayer().setBet(bet);
-            stake.getPlayer().updateBalance(-1 * bet);
-            repaint();
+        if (e.getKeyCode() == KeyEvent.VK_C) {
+            stake.getMines().setCashOut(true);
+            stake.play();
+            GAME_STATE = 3;
         }
+        repaint();
     }
 
     @Override
@@ -164,7 +165,6 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
     }
 
     public void paint(Graphics g) {
-        super.paint(g);
         if (GAME_STATE == 1) {
             g.setColor(Color.WHITE);
             g.drawRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -172,7 +172,6 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
             g.drawImage(minesLogo, 100, 300, 200, 300, this);
         }
         if (GAME_STATE == 2 || GAME_STATE == 3) {
-            cashOut.setVisible(true);
             minesField.setVisible(true);
             betField.setVisible(true);
             g.setColor(Color.BLACK);
@@ -181,8 +180,13 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
             g.setColor(Color.WHITE);
             g.drawString("Current Balance: ", 10, 260);
             g.drawString("Current Bet: ", 10, 310);
+            if (!doneTyping) {
+                g.drawString("Mines: ", 10, 65);
+                g.drawString("Bet ^^^ ", 10, 200);
+            }
             g.drawString(String.valueOf(stake.getPlayer().getBalance()), 10, 280);
             g.drawString(String.valueOf(stake.getPlayer().getBet()), 10, 330);
+            g.drawImage(play, 10, 400, 140, 30, this);
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
                     if (stake.getMines().getClicked(i, j)) {
