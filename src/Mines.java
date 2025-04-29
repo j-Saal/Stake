@@ -58,8 +58,8 @@ public class Mines {
         }
     }
 
-    public void setLost() {
-        this.lost = true;
+    public void setLost(boolean lost) {
+        this.lost = lost;
     }
 
     public void mineSafe() {
@@ -68,6 +68,10 @@ public class Mines {
 
     public void setCashOut(boolean cashOut) {
         this.cashOut = cashOut;
+    }
+
+    public int getNumMines() {
+        return this.numMines;
     }
 
     public boolean getOver() {

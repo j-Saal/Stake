@@ -75,7 +75,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
                 stake.play();
             }
             else {
-                stake.getMines().setLost();
+                stake.getMines().setLost(true);
                 stake.getMines().setClicked(getIndexeY(y), getIndexeX(x));
                 double multiplier = stake.getMines().getMultiplier();
                 stake.getPlayer().updateBalance(stake.getPlayer().getBet() * multiplier);
@@ -156,12 +156,26 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
             stake.play();
             GAME_STATE = 3;
         }
+        if (e.getKeyCode() == KeyEvent.VK_R && GAME_STATE == 3) {
+            resetGame();
+        }
         repaint();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
 
+    }
+
+    public void resetGame() {
+        doneTyping = false;
+        GAME_STATE = 2;
+        stake.getMines().updateMines(stake.getMines().getNumMines());
+        minesField.setText("");
+        betField.setText("");
+        stake.getMines().setLost(false);
+        stake.getMines().setCashOut(false);
+        repaint();
     }
 
     public void paint(Graphics g) {
