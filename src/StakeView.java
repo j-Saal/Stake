@@ -151,7 +151,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_C) {
+        if (e.getKeyCode() == KeyEvent.VK_C && GAME_STATE == 2) {
             stake.getMines().setCashOut(true);
             stake.play();
             GAME_STATE = 3;
