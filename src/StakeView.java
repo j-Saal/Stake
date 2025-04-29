@@ -70,8 +70,10 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
                 return;
             }
             if (stake.getMines().selectMine(getIndexeY(y), getIndexeX(x))) {
+                if (!stake.getMines().getClicked(getIndexeY(y), getIndexeX(x))) {
+                    stake.getMines().mineSafe();
+                }
                 stake.getMines().setClicked(getIndexeY(y), getIndexeX(x));
-                stake.getMines().mineSafe();
                 stake.play();
             }
             else {
@@ -175,6 +177,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         betField.setText("");
         stake.getMines().setLost(false);
         stake.getMines().setCashOut(false);
+        stake.getMines().resetNumClicked();
         repaint();
     }
 
@@ -197,6 +200,9 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
             if (!doneTyping) {
                 g.drawString("Mines: ", 10, 65);
                 g.drawString("Bet ^^^ ", 10, 200);
+            }
+            else {
+                g.drawString("Current Multiplier: " + stake.getMines().getMultiplier(), 10, 200);
             }
             g.drawString(String.valueOf(stake.getPlayer().getBalance()), 10, 280);
             g.drawString(String.valueOf(stake.getPlayer().getBet()), 10, 330);
