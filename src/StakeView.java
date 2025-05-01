@@ -108,8 +108,8 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
     }
 
     public int getIndexeY(int y) {
-        int gridStartY = 39;
-        int rectHeight = 150;
+        int gridStartY = 19;
+        int rectHeight = 140;
         int yOffset = 10;
 
         int row = (y - gridStartY) / (rectHeight + yOffset);
