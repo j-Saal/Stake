@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 
 public class Mines {
+
+    // Instance Variables
     private boolean[][] grid;
     private double[][] multipliers;
     private int numMines;
@@ -9,6 +11,7 @@ public class Mines {
     private boolean lost;
     private boolean[][] clicked;
 
+    // Constructor
     public Mines(int numMines) {
         this.numMines = numMines;
         lost = false;
@@ -19,22 +22,27 @@ public class Mines {
         updateMines(numMines);
     }
 
+    // Returns if there is a mine or diamond at given index
     public boolean selectMine(int row, int col) {
         return grid[row][col];
     }
 
+    // Sets the given index to explored
     public void setClicked(int row, int col) {
         clicked[row][col] = true;
     }
 
+    // Returns whether the given index is explored
     public boolean getClicked(int row, int col) {
         return this.clicked[row][col];
     }
 
+    // After a new round resets the number of explored boxes to 0
     public void resetNumClicked() {
         this.minesClicked = 0;
     }
 
+    // Recreates the grid of mines with a certain number of mines
     public void updateMines(int numMines) {
         this.numMines = numMines;
         ArrayList<Integer> indexes = new ArrayList<>();
@@ -63,26 +71,32 @@ public class Mines {
         }
     }
 
+    // Sets game state
     public void setLost(boolean lost) {
         this.lost = lost;
     }
 
+    // Adds one to the number of mines clicked
     public void mineSafe() {
         minesClicked++;
     }
 
+    // Changes cashout state
     public void setCashOut(boolean cashOut) {
         this.cashOut = cashOut;
     }
 
+    // Returns the number of mines in the grid
     public int getNumMines() {
         return this.numMines;
     }
 
+    // Returns whether game is over
     public boolean getOver() {
         return cashOut || lost;
     }
 
+    // Returns multiplier based on number clicked and number of mines
     public double getMultiplier() {
         multipliers = new double[][]{
                 {0, 1.01, 1.08, 1.12, 1.18, 1.24, 1.3, 1.37, 1.46, 1.55, 1.65, 1.77, 1.9, 2.06, 2.25, 2.47, 2.75, 3.09, 3.54, 4.12, 4.95, 6.19, 8.25, 12.37, 24.75},

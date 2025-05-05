@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class StakeView extends JFrame implements KeyListener, MouseListener, MouseMotionListener {
+    // Instance variables
     private final int WINDOW_WIDTH = 1000;
     private final int WINDOW_HEIGHT = 800;
     private final JTextField minesField;
@@ -12,6 +13,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
     private int GAME_STATE;
     private Image minesLogo, stakeBackground, minesSquares, diamond, bomb, play;
 
+    // Constructor
     public StakeView(Stake stake) {
         minesLogo = new ImageIcon("Resources/StakeMinesLogo.jpeg").getImage();
         stakeBackground = new ImageIcon("Resources/StakeBackground.png").getImage();
@@ -44,6 +46,8 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         add(betField);
     }
 
+    // If at home screen and click mines logo, starts game
+    // If game is playing, gets bets and gets which boxes clicked on
     @Override
     public void mouseClicked(MouseEvent e) {
         requestFocusInWindow();
@@ -90,6 +94,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         repaint();
     }
 
+    // Returns x value of which mine is clicked, or -1
     public int getIndexeX(int x) {
         int gridStartX = 164;
         int rectWidth = 125;
@@ -107,6 +112,7 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         return -1;
     }
 
+    // Returns y value of which mine is clicked or -1
     public int getIndexeY(int y) {
         int gridStartY = 19;
         int rectHeight = 140;
@@ -121,36 +127,28 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-    }
+    public void mousePressed(MouseEvent e) {}
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-    }
+    public void mouseReleased(MouseEvent e) {}
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-    }
+    public void mouseEntered(MouseEvent e) {}
 
     @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
+    public void mouseExited(MouseEvent e) {}
 
     @Override
-    public void mouseDragged(MouseEvent e) {
-
-    }
+    public void mouseDragged(MouseEvent e) {}
 
     @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
+    public void mouseMoved(MouseEvent e) {}
 
     @Override
-    public void keyTyped(KeyEvent e) {
-    }
+    public void keyTyped(KeyEvent e) {}
 
+    // If c is clicked - cashes out
+    // If r is clicked - restarts round
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_C && GAME_STATE == 2) {
@@ -165,10 +163,9 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(KeyEvent e) {}
 
-    }
-
+    // Resets game after lost or cashout is clicked
     public void resetGame() {
         doneTyping = false;
         GAME_STATE = 2;
@@ -181,6 +178,8 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
         repaint();
     }
 
+    // Paints title screen if game hasn't started
+    // Once in game paints the current state of the game
     public void paint(Graphics g) {
         if (GAME_STATE == 1) {
             g.setColor(Color.WHITE);
@@ -197,6 +196,8 @@ public class StakeView extends JFrame implements KeyListener, MouseListener, Mou
             g.setColor(Color.WHITE);
             g.drawString("Current Balance: ", 10, 260);
             g.drawString("Current Bet: ", 10, 310);
+            g.drawString("Press 'c' to cashOut", 850, 260);
+            g.drawString("Press 'r' to restart", 850, 310);
             if (!doneTyping) {
                 g.drawString("Mines: ", 10, 65);
                 g.drawString("Bet ^^^ ", 10, 200);
